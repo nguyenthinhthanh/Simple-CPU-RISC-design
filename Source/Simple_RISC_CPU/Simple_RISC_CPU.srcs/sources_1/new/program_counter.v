@@ -23,8 +23,8 @@
 // =============================================================
 // Module: Program Counter (PC)
 // Function: Stores the current address of the program.
-//It has the ability to reset, load new values (for jumping) and increment (increment).
-//Width: 5-bit
+// It has the ability to reset, load new values (for jumping) and increment (increment).
+// Width: 5-bit
 // =============================================================
 module program_counter (
     input wire clk,                 // Clock 
