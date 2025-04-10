@@ -22,17 +22,17 @@
 
 // =============================================================
 // Module: Program Counter (PC)
-// Ch?c n?ng: L?u tr? ??a ch? hi?n hành c?a ch??ng trình. 
-// Có kh? n?ng reset, load giá tr? m?i (cho jump) và t? t?ng khi hoàn thành câu l?nh (increment).
-// ?? r?ng: 5-bit
+// Function: Stores the current address of the program.
+//It has the ability to reset, load new values (for jumping) and increment (increment).
+//Width: 5-bit
 // =============================================================
 module program_counter (
     input wire clk,                 // Clock 
-    input wire reset,               // Tín hi?u reset
-    input wire load,               	// Khi load = 1, PC s? nh?n giá tr? data_in
-	input wire inc,               	// Cho b??c INST_ADDR
-    input wire [4:0] data_in,      	// D? li?u n?p vào, ??a ch? t? instruction
-    output reg [4:0] pc_out        	// Giá tr? hi?n t?i c?a PC
+    input wire reset,               // Reset signal
+    input wire load,               	
+	input wire inc,               	
+    input wire [4:0] data_in,      	
+    output reg [4:0] pc_out        	
 );
     always @(posedge clk or posedge reset) begin
         if (reset)
@@ -41,6 +41,5 @@ module program_counter (
             pc_out <= data_in;
         else if (inc)
             pc_out <= pc_out + 1;
-        // else gi? nguyên (n?u không làm gì)
     end
 endmodule
