@@ -43,15 +43,15 @@ module memory (
         for (i = 0; i < 32; i = i + 1)
             mem[i] = 8'b0;
         //  LDA 12: opcode 101, operand = 12  => 8'b10101100
-        mem[0] = 8'b10101100;
+        //mem[0] = 8'b10101100;
         // Memory write
-        mem[12] = 8'b00000011;
-//        //  ADD 13: opcode 010, operand = 13  => 8'b01001101
-//        mem[1] = 8'b01001101;
+        //mem[12] = 8'b00000011;
+        //  ADD 13: opcode 010, operand = 13  => 8'b01001101
+        //mem[0] = 8'b01001101;
 //        //  JMP 5:  opcode 111, operand = 5   => 8'b11100101
 //        mem[2] = 8'b11100101;
-        //  HLT:    opcode 000, operand = don't care => 8'b00000000
-        mem[3] = 8'b00000000;
+        //HLT:    opcode 000, operand = don't care => 8'b00000000
+        mem[0] = 8'b00000000;
     end
 
     always @(posedge clk) begin

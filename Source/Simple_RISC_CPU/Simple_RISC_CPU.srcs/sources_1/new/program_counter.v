@@ -29,17 +29,22 @@
 module program_counter (
     input wire clk,                 // Clock 
     input wire reset,               // Reset signal
-    input wire load,               	
-	input wire inc,               	
-    input wire [4:0] data_in,      	
-    output reg [4:0] pc_out        	
+    input wire load,               	// If load = 1, pc = data_in
+	input wire inc,               	// If inc = 1, pc = pc + 1
+    input wire [4:0] data_in,      	// Adress from IR
+    output reg [4:0] pc_out        	// Output pc
 );
     always @(posedge clk or posedge reset) begin
-        if (reset)
+        if (reset) begin
             pc_out <= 5'd0;
-        else if (load)
+        end
+        else if (load) begin
             pc_out <= data_in;
-        else if (inc)
-            pc_out <= pc_out + 1;
+        end
+        else if (inc) begin
+            if(pc_out < 5'd31) begin
+                pc_out <= pc_out + 1; 
+            end
+        end
     end
 endmodule

@@ -48,108 +48,118 @@ module controller(
     output reg inc_pc,   // Increment PC
     output reg ld_pc,    // Load PC (cho JMP)
     output reg ld_ac,    // Load Accumulator
+    output reg data_e,   
     output reg halt      
 );
     reg [2:0] state, next_state;
 
     // FSM Status Definition (8 Statuses)
-    localparam INST_ADDR = 3'd0;  // Get an address from a PC
+    localparam INST_ADDR  = 3'd0;  // Get an address from a PC
     localparam INST_FETCH = 3'd1; // Read commands from Memory
-    localparam INST_LOAD = 3'd2;  // Load commands into IR
+    localparam INST_LOAD  = 3'd2;  // Load commands into IR
     localparam IDLE       = 3'd3; // Decipher commands and decide to operate
-    localparam OP_FETCH   = 3'd4; // Read the Memory term (for LDA, ADD, AND, XOR,...)
-    localparam ALU_OP     = 3'd5; // Perform the ALU and load the results into ACC
-    localparam STORE      = 3'd6; // Write data from ACC to Memory (for STO)
-    localparam JMP_OP     = 3'd7; // Jump Execution (JMP)
+    localparam OP_ADDR    = 3'd4;  
+    localparam OP_FETCH   = 3'd5; // Read the Memory term (for LDA, ADD, AND, XOR,...)
+    localparam ALU_OP     = 3'd6; // Perform the ALU and load the results into ACC
+    localparam STORE      = 3'd7; // Write data from ACC to Memory (for STO)
 
     // FSM: status updates
     always @(posedge clk or posedge reset) begin
-        if (reset)
+        if (reset) begin
+            // Default off
+            sel <= 0;
+            rd <= 0;
+            ld_ir <= 0;
+            halt <= 0;
+            inc_pc <= 0;
+            ld_ac <= 0;
+            ld_pc <= 0;
+            wr <= 0; 
+            data_e <= 0;
+        
             state <= INST_ADDR;
+        end
         else
             state <= next_state;
     end
 
-    // FSM: state transfer logic and control signal generation
+    // FSM: state transfer logic
     always @(*) begin
-        // Initialize default control signals: all = 0
-        sel     = 0;
-        rd      = 0;
-        wr      = 0;
-        ld_ir   = 0;
-        inc_pc  = 0;
-        ld_pc   = 0;
-        ld_ac   = 0;
-        halt    = 0;
-        next_state = state;  // Defaults to keep current state
+        case (state)
+            INST_ADDR:  next_state = INST_FETCH;
+            INST_FETCH: next_state = INST_LOAD;
+            INST_LOAD:  next_state = IDLE;
+            IDLE: begin
+                if (opcode == 3'b000)                   // HLT
+                    next_state = state;  
+                else if (opcode == 3'b001 && is_zero)   // SKZ & zero
+                    next_state = INST_ADDR;
+                else
+                    next_state = OP_ADDR;
+            end
+            OP_ADDR:    next_state = OP_FETCH;
+            OP_FETCH:   next_state = ALU_OP;
+            ALU_OP:     next_state = STORE;
+            STORE:      next_state = INST_ADDR;
+            default:    next_state = INST_ADDR;
+        endcase
+    end
+    
+    // Control signal generation
+    always @(*) begin
+        // Default off
+        sel = 0;
+        rd = 0;
+        ld_ir = 0;
+        halt = 0;
+        inc_pc = 0;
+        ld_ac = 0;
+        ld_pc = 0;
+        wr = 0; 
+        data_e = 0;
 
         case (state)
             INST_ADDR: begin
-                // Prepare the address from the PC, increase the PC
-                inc_pc = 1;
-                next_state = INST_FETCH;
+                sel = 1;
             end
-
             INST_FETCH: begin
-                // Read commands from Memory
+                sel = 1;
                 rd = 1;
-                next_state = INST_LOAD;
             end
-
             INST_LOAD: begin
-                // Load the command into the Instruction Register
-                ld_ir = 1;
-                next_state = IDLE;
-            end
-
-            IDLE: begin
-                // Decoding commands based on opcodes
-                case (opcode)
-                    3'b000: begin // HLT
-                        halt = 1;
-                        next_state = INST_ADDR; // Can hold halt, depending on design
-                    end
-                    3'b111: begin // JMP: Jump to address in Operand
-                        sel = 1;    // Select operand from IR
-                        ld_pc = 1;  // Load PC with operand
-                        next_state = INST_ADDR;
-                    end
-                    3'b101: begin // LDA: loading data from Memory into ACC
-                        sel = 1;    // Select the operand address from IR
-                        next_state = OP_FETCH;
-                    end
-                    3'b110: begin // STO: write data from ACC to Memory
-                        sel = 1;    // Select the operand address from IR
-                        next_state = STORE;
-                    end
-                    default: begin // Math commands: ADD, AND, XOR, SKZ
-                        sel = 1;    // Select operand from IR (if needed)
-                        next_state = OP_FETCH;
-                    end
-                endcase
-            end
-
-            OP_FETCH: begin
-                // Reading the term Memory (operand)
+                sel = 1;
                 rd = 1;
-                next_state = ALU_OP;
+                ld_ir = 1;
             end
-
+            IDLE: begin
+                sel = 1;
+                rd = 1;
+                ld_ir = 1;
+                if (opcode == 3'b000)                       // HLT
+                    halt = 1;
+                else if (opcode == 3'b001 && is_zero)       // SKZ
+                    inc_pc = 1;
+            end
+            OP_ADDR: begin
+                if (opcode == 3'b111)                       // JMP
+                    ld_pc = 1;
+            end
+            OP_FETCH: begin
+                if (opcode != 3'b000 && opcode != 3'b001) // Avoid HLT/SKZ
+                    rd = 1;
+            end
             ALU_OP: begin
-                // Implement ALU; results are loaded into the Accumulator
-                ld_ac = 1;
-                next_state = INST_ADDR;
+                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101)
+                    ld_ac = 1;
+                else if (opcode == 3'b110) begin // STO
+                    wr = 1;
+                    data_e = 1;
+                end
             end
-
             STORE: begin
-                // Write data from ACC to Memory
-                wr = 1;
-                next_state = INST_ADDR;
-            end
-
-            default: begin
-                next_state = INST_ADDR;
+                // không c?n b?t tín hi?u gì ? tr?ng thái này
             end
         endcase
     end
+
 endmodule

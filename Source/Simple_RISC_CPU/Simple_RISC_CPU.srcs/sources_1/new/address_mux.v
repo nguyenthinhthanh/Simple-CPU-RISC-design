@@ -30,10 +30,10 @@
 module address_mux #(
     parameter WIDTH = 5
 )(
-    input wire [WIDTH-1:0] pc_addr,      
-    input wire [WIDTH-1:0] instr_addr,   
-    input wire sel,                    
+    input wire [WIDTH-1:0] pc_addr,     // Address from pc  
+    input wire [WIDTH-1:0] instr_addr,  // Adress from IR 
+    input wire sel,                     // Sel from controller, sel = 1 -> pc, sel = 1 -> IR
     output wire [WIDTH-1:0] addr_out     
 );
-    assign addr_out = sel ? instr_addr : pc_addr;
+    assign addr_out = sel ? pc_addr : instr_addr;
 endmodule
