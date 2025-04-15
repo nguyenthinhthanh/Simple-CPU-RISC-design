@@ -145,19 +145,19 @@ module controller(
                     ld_pc = 1;
             end
             OP_FETCH: begin
-                if (opcode != 3'b000 && opcode != 3'b001) // Avoid HLT/SKZ
+                if (opcode != 3'b000 && opcode != 3'b001)   // Avoid HLT/SKZ
                     rd = 1;
             end
             ALU_OP: begin
-                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101)
+                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) // ADD, AND, XOR, LDA
                     ld_ac = 1;
-                else if (opcode == 3'b110) begin // STO
+                else if (opcode == 3'b110) begin            // STO
                     wr = 1;
                     data_e = 1;
                 end
             end
             STORE: begin
-                // không c?n b?t tín hi?u gì ? tr?ng thái này
+                // Do nothing here
             end
         endcase
     end

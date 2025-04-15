@@ -49,6 +49,7 @@ module cpu_top (
     wire ld_pc;
     wire ld_ac;
     wire halt;
+    wire data_e;
 
     // ---------- Divide the field of Instruction ----------
     // 8-bit command format: [opcode(3-bit) | operand(5-bit)]
@@ -124,6 +125,7 @@ module cpu_top (
         .inc_pc(inc_pc), // Although this signal is not used directly in a PC (we use self-boosting), it can be used for debugging.
         .ld_pc(ld_pc),
         .ld_ac(ld_ac),
+        .data_e(data_e),
         .halt(halt)
     );
 
