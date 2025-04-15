@@ -108,14 +108,13 @@ module memory (
         mem[22] = 8'b000_00000;             // HALT
         mem[23] = 8'b000_00000;             // HALT : We end here
         mem[24] = 8'b111_00000;             // JMP 0
-        mem[25] = 8'b00000000;              // DATA 0x00
-        mem[26] = 8'b11111111;              // DATA 0xFF
-        mem[27] = 8'b10101010;              // 0xAA
-        mem[28] = 8'b111_00011;             // JUMP 3
-        mem[29] = 8'b000_00000;             // HALT
         
-        mem[30] = 8'b000_00000;             // HALT
-        mem[31] = 8'b000_00000;             // HALT 
+        mem[26] = 8'b00000000;              // DATA 0x00
+        mem[27] = 8'b11111111;              // DATA 0xFF
+        mem[28] = 8'b10101010;              // 0xAA
+        
+        mem[30] = 8'b111_00011;             // JUMP 3
+        mem[31] = 8'b000_00000;             // HALT
         
     end
 

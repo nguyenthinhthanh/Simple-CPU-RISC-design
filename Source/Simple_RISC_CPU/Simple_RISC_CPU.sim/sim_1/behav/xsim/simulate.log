@@ -1,0 +1,8 @@
+Time resolution is 1 ps
+Time=0 | PC=00000 | Instruction=00000000 | ACC=00000000 | Halt=0
+Time=35000 | PC=00000 | Instruction=11111110 | ACC=00000000 | Halt=0
+Time=55000 | PC=11110 | Instruction=11111110 | ACC=00000000 | Halt=0
+Time=115000 | PC=11110 | Instruction=11100011 | ACC=00000000 | Halt=0
+Time=135000 | PC=00011 | Instruction=11100011 | ACC=00000000 | Halt=0
+Time=195000 | PC=00011 | Instruction=10111010 | ACC=00000000 | Halt=0
+$finish called at time : 510 ns : File "D:/Vivado/Git_Simple_CPU_RISC_Design/Source/Simple_RISC_CPU/Simple_RISC_CPU.srcs/sim_1/new/tb_cpu_top.v" Line 51
