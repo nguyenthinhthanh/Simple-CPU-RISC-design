@@ -89,17 +89,22 @@ module controller(
             INST_ADDR:  next_state = INST_FETCH;
             INST_FETCH: next_state = INST_LOAD;
             INST_LOAD:  next_state = IDLE;
-            IDLE: begin
+            IDLE: next_state = OP_ADDR;
+            OP_ADDR: begin
                 if (opcode == 3'b000)                   // HLT
-                    next_state = state;  
-                else if (opcode == 3'b001 && is_zero)   // SKZ & zero
-                    next_state = INST_ADDR;
-                else
-                    next_state = OP_ADDR;
+                    next_state = state;
+                else begin  
+                    next_state = OP_FETCH;
+                end
             end
-            OP_ADDR:    next_state = OP_FETCH;
             OP_FETCH:   next_state = ALU_OP;
-            ALU_OP:     next_state = STORE;
+            ALU_OP: begin
+                if (opcode == 3'b001 && is_zero)   // SKZ & zero
+                    next_state = INST_ADDR;
+                else begin
+                    next_state = STORE;
+                end
+            end
             STORE:      next_state = INST_ADDR;
             default:    next_state = INST_ADDR;
         endcase
@@ -135,29 +140,39 @@ module controller(
                 sel = 1;
                 rd = 1;
                 ld_ir = 1;
-                if (opcode == 3'b000)                       // HLT
-                    halt = 1;
-                else if (opcode == 3'b001 && is_zero)       // SKZ
-                    inc_pc = 1;
             end
             OP_ADDR: begin
-                if (opcode == 3'b111)                       // JMP
-                    ld_pc = 1;
+                if (opcode == 3'b000)                       // HLT
+                    halt = 1;
+                else begin
+                    inc_pc = 1;
+                end
             end
             OP_FETCH: begin
-                if (opcode != 3'b000 && opcode != 3'b001)   // Avoid HLT/SKZ
+                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) // ADD, AND, XOR, LDA
                     rd = 1;
             end
             ALU_OP: begin
                 if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) // ADD, AND, XOR, LDA
-                    ld_ac = 1;
-                else if (opcode == 3'b110) begin            // STO
-                    wr = 1;
+                    rd = 1;
+                else if(opcode == 3'b001 && is_zero)        // SKZ
+                    inc_pc = 1;
+                else if (opcode == 3'b111)                  // JMP
+                    ld_pc = 1;
+                else if (opcode == 3'b110)                  // STO
                     data_e = 1;
-                end
             end
             STORE: begin
-                // Do nothing here
+                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) begin// ADD, AND, XOR, LDA
+                    rd = 1;
+                    ld_ac = 1;
+                end
+                else if (opcode == 3'b111)                  // JMP
+                    ld_pc = 1;
+                else if (opcode == 3'b110) begin            // STO
+                    data_e = 1;
+                    wr = 1;
+                end
             end
         endcase
     end
