@@ -47,7 +47,7 @@ module tb_cpu_top;
         
         // Cho phép mô ph?ng ch?y trong m?t kho?ng th?i gian nh?t ??nh,
         // ví d?: 200ns, sau ?ó d?ng mô ph?ng.
-        #500;
+        #1500;
         $finish;
     end
 
