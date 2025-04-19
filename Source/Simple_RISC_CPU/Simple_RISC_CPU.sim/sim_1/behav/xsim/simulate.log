@@ -33,18 +33,3 @@ Time=925000 | PC=01111 | Instruction=00100000 | ACC=00000000 | Halt=0
 Time=945000 | PC=10000 | Instruction=00100000 | ACC=00000000 | Halt=0
 Time=975000 | PC=10000 | Instruction=10011011 | ACC=00000000 | Halt=0
 Time=995000 | PC=10001 | Instruction=10011011 | ACC=00000000 | Halt=0
-Time=1025000 | PC=10001 | Instruction=10011011 | ACC=11111111 | Halt=0
-Time=1055000 | PC=10001 | Instruction=00100000 | ACC=11111111 | Halt=0
-Time=1075000 | PC=10010 | Instruction=00100000 | ACC=11111111 | Halt=0
-Time=1135000 | PC=10010 | Instruction=11110100 | ACC=11111111 | Halt=0
-Time=1155000 | PC=10011 | Instruction=11110100 | ACC=11111111 | Halt=0
-Time=1175000 | PC=10100 | Instruction=11110100 | ACC=11111111 | Halt=0
-Time=1215000 | PC=10100 | Instruction=10011011 | ACC=11111111 | Halt=0
-Time=1235000 | PC=10101 | Instruction=10011011 | ACC=11111111 | Halt=0
-Time=1265000 | PC=10101 | Instruction=10011011 | ACC=00000000 | Halt=0
-Time=1295000 | PC=10101 | Instruction=00100000 | ACC=00000000 | Halt=0
-Time=1315000 | PC=10110 | Instruction=00100000 | ACC=00000000 | Halt=0
-Time=1335000 | PC=10111 | Instruction=00100000 | ACC=00000000 | Halt=0
-Time=1365000 | PC=10111 | Instruction=00000000 | ACC=00000000 | Halt=0
-Time=1375000 | PC=10111 | Instruction=00000000 | ACC=00000000 | Halt=1
-$finish called at time : 1510 ns : File "D:/Vivado/Git_Simple_CPU_RISC_Design/Source/Simple_RISC_CPU/Simple_RISC_CPU.srcs/sim_1/new/tb_cpu_top.v" Line 51

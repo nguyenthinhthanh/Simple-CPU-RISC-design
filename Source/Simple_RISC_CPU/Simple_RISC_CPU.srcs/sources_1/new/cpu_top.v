@@ -59,7 +59,7 @@ module cpu_top (
     always @(posedge clk or posedge reset) begin
         if (reset)
             prev_opcode <= 3'b000;
-        else if (ld_ir_en)
+        else if (ld_ir)
             prev_opcode <= opcode;
     end
 
