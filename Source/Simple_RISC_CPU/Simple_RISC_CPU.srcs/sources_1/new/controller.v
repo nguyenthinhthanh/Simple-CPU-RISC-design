@@ -49,6 +49,7 @@ module controller(
     output reg ld_pc,    // Load PC (cho JMP)
     output reg ld_ac,    // Load Accumulator
     output reg data_e,   
+    output reg ext,
     output reg halt      
 );
     reg [2:0] state, next_state;
@@ -76,6 +77,7 @@ module controller(
             ld_pc <= 0;
             wr <= 0; 
             data_e <= 0;
+            ext <= 0;
         
             state <= INST_ADDR;
         end
@@ -122,6 +124,7 @@ module controller(
         ld_pc = 0;
         wr = 0; 
         data_e = 0;
+        ext = 0;
 
         case (state)
             INST_ADDR: begin

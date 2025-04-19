@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="810.416 ns"></ZoomStartTime>
-      <ZoomEndTime time="1,037.917 ns"></ZoomEndTime>
+      <ZoomStartTime time="0.000 ns"></ZoomStartTime>
+      <ZoomEndTime time="1,030.619 ns"></ZoomEndTime>
       <Cursor1Time time="1,000.000 ns"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="340"></NameColumnWidth>
-      <ValueColumnWidth column_width="150"></ValueColumnWidth>
+      <ValueColumnWidth column_width="145"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="10" />
    <wvobject fp_name="/tb_cpu_top/clk" type="logic">
@@ -144,9 +144,17 @@
          <obj_property name="ElementShortName">inB[7:0]</obj_property>
          <obj_property name="ObjectShortName">inB[7:0]</obj_property>
       </wvobject>
+      <wvobject fp_name="/tb_cpu_top/uut/alu_inst/ext" type="logic">
+         <obj_property name="ElementShortName">ext</obj_property>
+         <obj_property name="ObjectShortName">ext</obj_property>
+      </wvobject>
       <wvobject fp_name="/tb_cpu_top/uut/alu_inst/opcode" type="array">
          <obj_property name="ElementShortName">opcode[2:0]</obj_property>
          <obj_property name="ObjectShortName">opcode[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cpu_top/uut/alu_inst/overflow" type="logic">
+         <obj_property name="ElementShortName">overflow</obj_property>
+         <obj_property name="ObjectShortName">overflow</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_cpu_top/uut/alu_inst/result" type="array">
          <obj_property name="ElementShortName">result[7:0]</obj_property>
@@ -200,6 +208,10 @@
       <wvobject fp_name="/tb_cpu_top/uut/ctrl_inst/data_e" type="logic">
          <obj_property name="ElementShortName">data_e</obj_property>
          <obj_property name="ObjectShortName">data_e</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_cpu_top/uut/ctrl_inst/ext" type="logic">
+         <obj_property name="ElementShortName">ext</obj_property>
+         <obj_property name="ObjectShortName">ext</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_cpu_top/uut/ctrl_inst/halt" type="logic">
          <obj_property name="ElementShortName">halt</obj_property>
