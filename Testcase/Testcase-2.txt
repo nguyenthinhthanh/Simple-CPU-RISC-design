@@ -4,31 +4,31 @@
  * Kết quả cần có: Chương trình kết thúc (HLT) ở địa chỉ 0x10
  *****************************************************************************/
 
-// opcode_operand   // addr     assembly code
-// ---------------  // -----    ----------------------------
-@00  101_00101      // 00       LDA NUM_1      ; Acc = 0x0A
-      010_00110      // 01       ADD NUM_2      ; Acc = Acc + 0x14 = 0x1E
-      110_00111      // 02       STO RESULT      ; RESULT = Acc = 0x1E
-      101_00111      // 03       LDA RESULT      ; Acc = 0x1E
-      100_00110      // 04       XOR NUM_2       ; Acc = 0x1E ^ 0x14 = 0x0A
-      001_00000      // 05       SKZ             ; không bỏ lệnh vì Acc ≠ 0
-      101_00101      // 06       LDA NUM_1       ; Acc = 0x0A
-      100_00110      // 07       XOR NUM_2       ; Acc = 0x0A ^ 0x14 = 0x1E
-      001_00000      // 08       SKZ             ; Acc ≠ 0 → không bỏ
-      101_00111      // 09       LDA RESULT       ; Acc = 0x1E
-      001_00000      // 0A       SKZ             ; Acc ≠ 0
-      111_10100      // 0B       JMP END         ; nhảy đến địa chỉ 0x14
-      000_00000      // 0C       HLT             ; không được thực hiện
-      000_00000      // 0D       HLT             ; không được thực hiện
-      000_00000      // 0E       HLT             ; không được thực hiện
-      000_00000      // 0F       HLT             ; không được thực hiện
-      000_00000      // 10  END: HLT             ; chương trình dừng tại đây
+// opcode_operand    // addr     assembly code
+// ---------------   // -----    ----------------------------
+@00   101_00101      // 00       LDA NUM_1      	; Acc = 0x0A
+      010_00110      // 01       ADD NUM_2      	; Acc = Acc + 0x14 = 0x1E
+      110_00111      // 02       STO RESULT      	; RESULT = Acc = 0x1E
+      101_00111      // 03       LDA RESULT      	; Acc = 0x1E
+      100_00110      // 04       XOR NUM_2       	; Acc = 0x1E ^ 0x14 = 0x0A
+      001_00000      // 05       SKZ             	; không bỏ lệnh vì Acc ≠ 0
+      101_00101      // 06       LDA NUM_1       	; Acc = 0x0A
+      100_00110      // 07       XOR NUM_2       	; Acc = 0x0A ^ 0x14 = 0x1E
+      001_00000      // 08       SKZ             	; Acc ≠ 0 → không bỏ
+      101_00111      // 09       LDA RESULT       	; Acc = 0x1E
+      001_00000      // 0A       SKZ             	; Acc ≠ 0
+      111_10100      // 0B       JMP END         	; nhảy đến địa chỉ 0x14
+      000_00000      // 0C       HLT             	; không được thực hiện
+      000_00000      // 0D       HLT             	; không được thực hiện
+      000_00000      // 0E       HLT             	; không được thực hiện
+      000_00000      // 0F       HLT             	; không được thực hiện
+      000_00000      // 10  END: HLT             	; chương trình dừng tại đây
 
 @15  00001010        // 15   NUM_1:   0x0A
       00010100        // 16   NUM_2:   0x14
       00000000        // 17   RESULT:  init = 0x00
 
- Giải thích chi tiết các bước:
+Giải thích chi tiết các bước:
 
 PC	Lệnh		Hoạt động
 00	LDA NUM_1	Acc = 0x0A
