@@ -36,14 +36,14 @@ module program_counter (
 );
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            pc_out <= 5'd0;
+            pc_out <= 5'd0;             // Initialization
         end
         else if (load) begin
-            pc_out <= data_in;
+            pc_out <= data_in;          // Load data_in to pc_out 
         end
         else if (inc) begin
             if(pc_out < 5'd31) begin
-                pc_out <= pc_out + 1; 
+                pc_out <= pc_out + 1;  // Increase pc when have inc signal
             end
         end
     end
