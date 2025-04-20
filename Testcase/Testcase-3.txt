@@ -1,0 +1,40 @@
+/****************************************************************************** 
+ * Test program: ADD instruction test
+ *
+ * Kết quả cần có: 
+ * - NORM_RES = 0x0A + 0x05 = 0x0F
+ * - OV_RES   = 0xFF + 0x02 = 0x01 (wrap‑around)
+ * - HZ_RES   = 0x05 + 0x03 = 0x08
+ * - HZ2X     = 0x08 + 0x08 = 0x10 (data hazard)
+ * CPU dừng (HLT) tại địa chỉ 0x0B
+ *****************************************************************************/
+
+// opcode_operand  // addr  assembly code
+@00   101_01100      // 00  LDA NORM1       ; AC = 0x0A
+      010_01101      // 01  ADD NORM2       ; AC = 0x0A + 0x05 = 0x0F
+      110_01110      // 02  STO NORM_RES    ; NORM_RES = 0x0F
+
+      101_01111      // 03  LDA OV1         ; AC = 0xFF
+      010_10000      // 04  ADD OV2         ; AC = 0xFF + 0x02 = 0x01 (overflow)
+      110_10001      // 05  STO OV_RES      ; OV_RES = 0x01
+
+      101_10010      // 06  LDA HZ1         ; AC = 0x05
+      010_10011      // 07  ADD HZ2         ; AC = 0x05 + 0x03 = 0x08
+      110_10100      // 08  STO HZ_RES      ; HZ_RES = 0x08
+
+      010_10100      // 09  ADD HZ_RES      ; AC = 0x08 + 0x08 = 0x10 (data hazard)
+      110_10101      // 0A  STO HZ2X       ; HZ2X = 0x10
+
+      000_00000      // 0B  HLT             ; dừng chương trình
+
+// Data section (địa chỉ 0–31)
+@12   00001010      // 12  NORM1:   0x0A
+      00000101      // 13  NORM2:   0x05
+      00000000      // 14  NORM_RES:init=0x00
+      11111111      // 15  OV1:     0xFF
+      00000010      // 16  OV2:     0x02
+      00000000      // 17  OV_RES:init=0x00
+      00000101      // 18  HZ1:     0x05
+      00000011      // 19  HZ2:     0x03
+      00000000      // 20  HZ_RES:init=0x00
+      00000000      // 21  HZ2X:init=0x00
