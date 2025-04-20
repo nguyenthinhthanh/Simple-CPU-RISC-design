@@ -51,9 +51,14 @@ module tb_cpu_top;
         $finish;
     end
 
-     initial begin
-         $monitor("Time=%0t | PC=%b | Instruction=%b | ACC=%b | Halt=%b",
-                  $time, uut.pc_inst.pc_out, uut.ir_inst.instr_out, uut.acc_inst.acc_out, uut.ctrl_inst.halt);
-     end
+//     initial begin
+//         $monitor("Time=%0t | PC=%b | Instruction=%b | ACC=%b | Halt=%b",
+//                  $time, uut.pc_inst.pc_out, uut.ir_inst.instr_out, uut.acc_inst.acc_out, uut.ctrl_inst.halt);
+//     end
+
+    always @(posedge uut.ctrl_inst.sel) begin
+        $display("[%0t ns] >>> SELECT SIGNAL -- PC=%0d | OPCODE=%03b | INSTR=%02h | ACC=%02h | ALU_RESULT=%02h",
+             $time, uut.pc_inst.pc_out, uut.opcode, uut.ir_inst.instr_out, uut.acc_inst.acc_out, uut.alu_inst.result);
+    end
 
 endmodule
