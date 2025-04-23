@@ -53,6 +53,10 @@ module controller(
     output reg halt      
 );
     reg [2:0] state, next_state;
+    
+    // Intermediate control signals
+    reg next_sel, next_rd, next_ld_ir, next_halt, next_inc_pc, next_ld_ac;
+    reg next_ld_pc, next_wr, next_data_e, next_ext;
 
     // FSM Status Definition (8 Statuses)
     localparam INST_ADDR  = 3'd0;  // Get an address from a PC
@@ -81,8 +85,19 @@ module controller(
         
             state <= INST_ADDR;
         end
-        else
-            state <= next_state;
+        else begin
+            sel     <= next_sel;
+            rd      <= next_rd;
+            ld_ir   <= next_ld_ir;
+            halt    <= next_halt;
+            inc_pc  <= next_inc_pc;
+            ld_ac   <= next_ld_ac;
+            ld_pc   <= next_ld_pc;
+            wr      <= next_wr;
+            data_e  <= next_data_e;
+            ext     <= next_ext;
+            state   <= next_state;
+        end
     end
 
     // FSM: state transfer logic
@@ -112,69 +127,72 @@ module controller(
         endcase
     end
     
-    // Control signal generation
+    // ======================
+    // Control signal logic
+    // ======================
     always @(*) begin
-        // Default off
-        sel = 0;
-        rd = 0;
-        ld_ir = 0;
-        halt = 0;
-        inc_pc = 0;
-        ld_ac = 0;
-        ld_pc = 0;
-        wr = 0; 
-        data_e = 0;
-        ext = 0;
+        // Default all to 0
+        next_sel     = 0;
+        next_rd      = 0;
+        next_ld_ir   = 0;
+        next_halt    = 0;
+        next_inc_pc  = 0;
+        next_ld_ac   = 0;
+        next_ld_pc   = 0;
+        next_wr      = 0;
+        next_data_e  = 0;
+        next_ext     = 0;
 
         case (state)
             INST_ADDR: begin
-                sel = 1;
+                next_sel = 1;
             end
             INST_FETCH: begin
-                sel = 1;
-                rd = 1;
+                next_sel = 1;
+                next_rd = 1;
             end
             INST_LOAD: begin
-                sel = 1;
-                rd = 1;
-                ld_ir = 1;
+                next_sel = 1;
+                next_rd = 1;
+                next_ld_ir = 1;
             end
             IDLE: begin
-                sel = 1;
-                rd = 1;
-                ld_ir = 1;
+                next_sel = 1;
+                next_rd = 1;
+                next_ld_ir = 1;
             end
             OP_ADDR: begin
-                if (opcode == 3'b000)                       // HLT
-                    halt = 1;
-                else begin
-                    inc_pc = 1;
-                end
+                if (opcode == 3'b000)       // HLT
+                    next_halt = 1;
+                else
+                    next_inc_pc = 1;
             end
             OP_FETCH: begin
-                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) // ADD, AND, XOR, LDA
-                    rd = 1;
+                if (opcode == 3'b010 || opcode == 3'b011 ||
+                    opcode == 3'b100 || opcode == 3'b101)  // ADD, AND, XOR, LDA
+                    next_rd = 1;
             end
             ALU_OP: begin
-                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) // ADD, AND, XOR, LDA
-                    rd = 1;
-                else if(opcode == 3'b001 && is_zero)        // SKZ
-                    inc_pc = 1;
-                else if (opcode == 3'b111)                  // JMP
-                    ld_pc = 1;
-                else if (opcode == 3'b110)                  // STO
-                    data_e = 1;
+                if (opcode == 3'b010 || opcode == 3'b011 ||
+                    opcode == 3'b100 || opcode == 3'b101)
+                    next_rd = 1;
+                else if (opcode == 3'b001 && is_zero)      // SKZ
+                    next_inc_pc = 1;
+                else if (opcode == 3'b111)                 // JMP
+                    next_ld_pc = 1;
+                else if (opcode == 3'b110)                 // STO
+                    next_data_e = 1;
             end
             STORE: begin
-                if (opcode == 3'b010 || opcode == 3'b011 || opcode == 3'b100 || opcode == 3'b101) begin// ADD, AND, XOR, LDA
-                    rd = 1;
-                    ld_ac = 1;
-                end
-                else if (opcode == 3'b111)                  // JMP
-                    ld_pc = 1;
-                else if (opcode == 3'b110) begin            // STO
-                    data_e = 1;
-                    wr = 1;
+                if (opcode == 3'b010 || opcode == 3'b011 ||
+                    opcode == 3'b100 || opcode == 3'b101) begin
+                    next_rd = 1;
+                    next_ld_ac = 1;
+                end else if (opcode == 3'b111) begin
+                    next_ld_pc = 1;
+                end else if (opcode == 3'b110) begin
+                    next_data_e = 1;
+                    next_wr = 1;
                 end
             end
         endcase
