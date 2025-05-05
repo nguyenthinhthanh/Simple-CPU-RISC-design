@@ -27,7 +27,8 @@
 // =============================================================
 module cpu_top (
     input wire clk,
-    input wire reset
+    input wire reset,
+    output wire led_halt
 );
     // ---------- Definition of internal connectivity -----------
     wire [4:0] pc_out;          // Output of PC
@@ -155,4 +156,5 @@ module cpu_top (
     );
 
     // Note: The halt signal can be used to stop the simulation or perform a special action.
+    assign led_halt = halt;
 endmodule
